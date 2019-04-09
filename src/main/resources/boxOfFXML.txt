@@ -1,0 +1,8 @@
+<ImageView fitHeight="150.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="http://www.imaginaformacion.com/wp-content/uploads/2010/06/JavaFx.png" />
+            </image>
+        </ImageView>
+
+
+

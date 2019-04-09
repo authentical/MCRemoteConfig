@@ -1,0 +1,89 @@
+<?import javafx.scene.layout.GridPane?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<BorderPane fx:controller="com.potatospy.mcremote.Controller"
+            xmlns:fx="http://javafx.com/fxml">
+
+
+    <!--Menu bar, Buttons and fields-->
+    <top>
+        <VBox>
+
+
+            <MenuBar>
+                <Menu text="File">
+                    <items>
+                        <!--<MenuItem text="New" onAction="#showNewItemDialog"/>-->
+                        <!--<SeparatorMenuItem/>-->
+                        <MenuItem text="Exit    " onAction="#handleExit"/>
+                    </items>
+                </Menu>
+            </MenuBar>
+
+
+            <HBox spacing="5">
+
+
+                <!-- BUTTONS -->
+                <padding>
+                    <Insets top="10"/>
+                </padding>
+                <VBox spacing="5" minWidth="20">
+                    <Button fx:id="connect" onAction="#login" text="Connect"/>
+                    <Button fx:id="disconnect" onAction="#disconnect" text="Disconnect"/>
+                </VBox>
+
+
+                <!-- FIELDS -->
+                <Label text="IP:" alignment="TOP_RIGHT" style="-fx-font-size: 14px" minWidth="20.0" maxWidth="20.0"/>
+                <TextField fx:id="ipTextField" style="-fx-font-size: 14px" maxHeight="15.0" minWidth="120.0"
+                          maxWidth="130.0"/>
+
+                <Label text="Port:" alignment="TOP_RIGHT" style="-fx-font-size: 14px" minWidth="30.0" maxWidth="30.0"/>
+                <TextField fx:id="portTextField" style="-fx-font-size: 14px" maxHeight="15.0" minWidth="60.0"
+                          maxWidth="60.0" />
+
+                <Label alignment="TOP_RIGHT" text="Username:" style="-fx-font-size: 14px" minWidth="70.0"
+                       maxWidth="70.0"/>
+                <TextField fx:id="usernameTextField" style="-fx-font-size: 14px" maxHeight="15.0" minWidth="140.0"
+                          maxWidth="140.0" />
+
+                <Label alignment="TOP_RIGHT" text="Password:"
+                       style="-fx-font-size: 14px; -fx-hbar-policy: never; -fx-vbar-policy: never" minWidth="70.0"
+                       maxWidth="70.0"/>
+                <PasswordField fx:id="passwordPassworldField" style="-fx-font-size: 14px" maxHeight="15.0" minWidth="140.0"
+                          maxWidth="140.0"/>
+
+
+            </HBox>
+        </VBox>
+    </top>
+
+    <!--Scrollable list and content view-->
+    <bottom>
+        <VBox style="-fx-background-color: white">
+            <HBox>
+
+                <ListView fx:id="fileListView" onMouseClicked="#handleClickListView" onKeyPressed="#handleKeyPressed"/>
+
+                <TextArea fx:id="fileContentsTextArea" VBox.vgrow="ALWAYS"/>
+
+            </HBox>
+        </VBox>
+    </bottom>
+
+</BorderPane>
