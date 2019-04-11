@@ -21,7 +21,7 @@ public class Connection {
     private FTPClient client;
 
 
-    // constructor
+    // Constructor
 
     public Connection(String serverIP, int serverPort, String username, String password) {
         this.serverIP = serverIP;
@@ -86,8 +86,16 @@ public class Connection {
             client.setFileType(FTP.BINARY_FILE_TYPE);
 
             // Copy the files into the FileData list. If directory null, its assumed to be ftp user root Todo really?
+
             FileData.getInstance().loadDirectoryContents(
-                    client.listFiles(directory /*, !FTPFileFilters.DIRECTORIES   Todo doesnt work*/),
+                    // Return files and directories, filter for files only
+                    client.listFiles(directory, new FTPFileFilter() {
+                        @Override
+                        public boolean accept(FTPFile file) {
+                            return file.isFile();
+                        }
+                    }),
+                    // Return directories
                     client.listDirectories());
 
         } catch (IOException e) {// Handle Todo
