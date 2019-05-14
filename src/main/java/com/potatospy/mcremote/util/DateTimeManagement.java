@@ -1,4 +1,4 @@
-package com.potatospy.mcremote;
+package com.potatospy.mcremote.util;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -6,8 +6,6 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 public class DateTimeManagement {
-
-
 
 
     public static LocalDateTime toLocalDateTime(Calendar calendar){

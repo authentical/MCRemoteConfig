@@ -1,4 +1,4 @@
-package com.potatospy.mcremote;
+package com.potatospy.mcremote.ui.configuration;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

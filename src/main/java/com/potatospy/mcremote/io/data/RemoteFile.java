@@ -1,21 +1,21 @@
-package com.potatospy.mcremote;
+package com.potatospy.mcremote.io.data;
 
-import java.net.URL;
 import java.time.LocalDateTime;
+
 
 public class RemoteFile {
 
 
     private String fileName;
-    private String fileloc;
+    private String filePath;
     private LocalDateTime modifiedDateTime;
     private String content;
     private boolean isDirectory;
 
 
-    public RemoteFile(String fileName, String fileloc, LocalDateTime modifiedDateTime, String content, boolean isDirectory) {
+    public RemoteFile(String fileName, String filePath, LocalDateTime modifiedDateTime, String content, boolean isDirectory) {
         this.fileName = fileName;
-        this.fileloc = fileloc;
+        this.filePath = filePath;
         this.modifiedDateTime = modifiedDateTime;
         this.content = content;
         this.isDirectory = isDirectory;
@@ -46,12 +46,12 @@ public class RemoteFile {
         this.content = content;
     }
 
-    public String getFileloc() {
-        return fileloc;
+    public String getFilePath() {
+        return filePath;
     }
 
-    public void setFileloc(String fileloc) {
-        this.fileloc = fileloc;
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     public boolean isDirectory() {

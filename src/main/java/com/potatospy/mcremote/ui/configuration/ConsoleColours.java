@@ -1,4 +1,4 @@
-package com.potatospy.mcremote;
+package com.potatospy.mcremote.ui.configuration;
 
 public class ConsoleColours {
     public static final String ANSI_RESET = "\u001B[0m";

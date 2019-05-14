@@ -15,6 +15,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.text.Text?>
 <BorderPane fx:controller="com.potatospy.mcremote.Controller"
             xmlns:fx="http://javafx.com/fxml">
 
@@ -47,28 +48,38 @@
                     <Button fx:id="disconnect" onAction="#disconnect" text="Disconnect"/>
                 </VBox>
 
+                <VBox>
+                    <HBox>
+                        <!-- FIELDS -->
+                        <Label text="IP:" alignment="TOP_RIGHT" style="-fx-font-size: 14px" minWidth="20.0"
+                               maxWidth="20.0"/>
+                        <TextField fx:id="ipTextField" style="-fx-font-size: 14px" maxHeight="15.0" minWidth="120.0"
+                                   maxWidth="130.0"/>
 
-                <!-- FIELDS -->
-                <Label text="IP:" alignment="TOP_RIGHT" style="-fx-font-size: 14px" minWidth="20.0" maxWidth="20.0"/>
-                <TextField fx:id="ipTextField" style="-fx-font-size: 14px" maxHeight="15.0" minWidth="120.0"
-                          maxWidth="130.0"/>
+                        <Label text="Port:" alignment="TOP_RIGHT" style="-fx-font-size: 14px" minWidth="30.0"
+                               maxWidth="30.0"/>
+                        <TextField fx:id="portTextField" style="-fx-font-size: 14px" maxHeight="15.0" minWidth="60.0"
+                                   maxWidth="60.0"/>
 
-                <Label text="Port:" alignment="TOP_RIGHT" style="-fx-font-size: 14px" minWidth="30.0" maxWidth="30.0"/>
-                <TextField fx:id="portTextField" style="-fx-font-size: 14px" maxHeight="15.0" minWidth="60.0"
-                          maxWidth="60.0" />
+                        <Label alignment="TOP_RIGHT" text="Username:" style="-fx-font-size: 14px" minWidth="70.0"
+                               maxWidth="70.0"/>
+                        <TextField fx:id="usernameTextField" style="-fx-font-size: 14px" maxHeight="15.0"
+                                   minWidth="140.0"
+                                   maxWidth="140.0"/>
 
-                <Label alignment="TOP_RIGHT" text="Username:" style="-fx-font-size: 14px" minWidth="70.0"
-                       maxWidth="70.0"/>
-                <TextField fx:id="usernameTextField" style="-fx-font-size: 14px" maxHeight="15.0" minWidth="140.0"
-                          maxWidth="140.0" />
-
-                <Label alignment="TOP_RIGHT" text="Password:"
-                       style="-fx-font-size: 14px; -fx-hbar-policy: never; -fx-vbar-policy: never" minWidth="70.0"
-                       maxWidth="70.0"/>
-                <PasswordField fx:id="passwordPassworldField" style="-fx-font-size: 14px" maxHeight="15.0" minWidth="140.0"
-                          maxWidth="140.0"/>
-
-
+                        <Label alignment="TOP_RIGHT" text="Password:"
+                               style="-fx-font-size: 14px; -fx-hbar-policy: never; -fx-vbar-policy: never"
+                               minWidth="70.0"
+                               maxWidth="70.0"/>
+                        <PasswordField fx:id="passwordPassworldField" style="-fx-font-size: 14px" maxHeight="15.0"
+                                       minWidth="140.0"
+                                       maxWidth="140.0"/>
+                    </HBox>
+                    <HBox>
+                        <Text fx:id="fileCountText"/>
+                        <Text fx:id="directoryCountText"/>
+                    </HBox>
+                </VBox>
             </HBox>
         </VBox>
     </top>
@@ -78,7 +89,8 @@
         <VBox style="-fx-background-color: white">
             <HBox>
 
-                <ListView fx:id="fileListView" onMouseClicked="#handleClickListView" onKeyPressed="#handleKeyPressed"/>
+                <ListView fx:id="fileListView" onMouseClicked="#handleFileListViewClick"
+                          onKeyPressed="#handleKeyPressed"/>
 
                 <TextArea fx:id="fileContentsTextArea" VBox.vgrow="ALWAYS"/>
 

@@ -1,12 +1,17 @@
 package com.potatospy.mcremote;
 
 
+import com.potatospy.mcremote.ClientManager;
+import com.potatospy.mcremote.io.data.FtpDataManager;
+import com.potatospy.mcremote.io.data.RemoteFile;
+import com.potatospy.mcremote.io.connection.ConnectionManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.*;
@@ -14,14 +19,12 @@ import java.util.*;
 
 public class Controller implements Initializable {
 
-    StringBuilder sb = new StringBuilder(); // For compiling the log and any errors
-
-    Connection connection;
+    private ClientManager clientMgr = new ClientManager();
 
 
     // FX fields and views
     @FXML
-    private ListView<RemoteFile> fileListView;  // Files ListView
+    private ListView<RemoteFile> fileListView;  // Files ListView Todo when directory is big... the list runs down below window
     @FXML
     private TextArea fileContentsTextArea;      // File content TextArea Todo set this not editable when not connected to a server
 
@@ -34,42 +37,56 @@ public class Controller implements Initializable {
     @FXML
     private PasswordField passwordPassworldField;
 
+    @FXML
+    private Text fileCountText;
+    @FXML
+    private Text directoryCountText;
+
+    @FXML
+    private Text logText;
+
+
+//    public Controller(ClientManager clientMgr) {
+//        this.clientMgr = new ClientManager();
+//    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-
-        // Configure way files are selected in the List
-        // One file at a time
+        // Configure the way files are selected in the List: One file at a time
         fileListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        //fileListView.getSelectionModel().selectFirst();
-
-
-        /*
-         * Clicking a file will select it: The cell will be selected and
-         * the contents of the file will be downloaded and shown in the fileContentsTextArea
-         *
-         * */
-
+        fileListView.getSelectionModel().selectFirst(); // Todo test there is always a first item to select
 
     }
 
 
     // If the RemoteFile is a File, Get the file contents from the file entry selected in the ListView,
     // download it's contents and present it in the fileContentsTextArea,
-    // otherwise it's a directory so open that directory and reload list
+    // otherwise it's a directory so openConnection that directory and reload list
     @FXML
-    public void handleClickListView() {
+    public void handleFileListViewClick() {
+        // Todo add log text
+
+        // If the file list isn't empty, check which item has been clicked
         if (!fileListView.getItems().isEmpty()) {
 
-            RemoteFile file = fileListView.getSelectionModel().getSelectedItem();
+            RemoteFile selectedFile = fileListView.getSelectionModel().getSelectedItem();
 
-            if(file.isDirectory()) {
+            // Load the file content if it's a file,
+            // Load the directory list if it's a directory
+            if(!selectedFile.isDirectory()){
 
-                fileContentsTextArea.setText(connection.getFileContents(file.getFileName()));
+                // Load file contents
+                fileContentsTextArea.setText(selectedFile.getContent());
+
             }else{
-                getFileEntriesFromDirectory(file.getFileloc()+file.getFileName()); ///////////////////////////////////// Todo hmmmmm
-                fileListView.setItems(FileData.getInstance().getRemoteFiles());
+
+                // Clear UI directory list and file contents text area
+                fileListView.getItems().clear();
+                fileContentsTextArea.setText("");
+
+                // Download directory list and update UI
+                downloadAndUpdateDirectoryList(selectedFile);
             }
         } else {
             System.out.println("No files in list");
@@ -77,65 +94,17 @@ public class Controller implements Initializable {
     }
 
 
-    // LOGIN and LOGOUT /////////////////////////////////////////// Todo Move?
-    @FXML
-    public void login() {
-
-//        connection = new Connection(
-//                ipTextField.getText().trim(),
-//                Integer.parseInt(portTextField.getText().trim()),
-//                usernameTextField.getText().trim(),
-//                passwordPassworldField.getText().trim());
-        connection = new Connection(
-                "192.168.3.7",
-                Integer.parseInt("6000"),
-                "ftpuser",
-                "12345");
-
-        // Get  loggable info and error info from Connection
-        sb.append(connection.open());
-        System.out.println(sb.toString()); // Todo Pass this to the GUI so user can see
-
-        //
-        getFileEntriesFromDirectory(null);
-        fileListView.setItems(FileData.getInstance().getRemoteFiles());
-        sb.setLength(0);
-    }
-
-
-    @FXML
-    public void disconnect() {
-
-        // Get loggable info and error info from Connection
-        sb.append(connection.close());
-        System.out.println(sb.toString());  // Todo Pass this to the GUI so user can see
-
-        // Remove all from FileData list and ListView
-        FileData.getInstance().removeAllFiles();
-        fileListView.getItems().clear();
-        fileContentsTextArea.setText("");
-    }
-
-
     // Call deleteFile when key is pressed ////////////////////////////
     public void handleKeyPressed(KeyEvent keyEvent) {
+        // Todo add log text
+        // New windows "Are you sure?"
 
         RemoteFile file = fileListView.getSelectionModel().getSelectedItem();
         if (file != null) {
-            if (keyEvent.getCode().equals(KeyCode.DELETE)) {            // Todo Call connection handler?
+            if (keyEvent.getCode().equals(KeyCode.DELETE)) {            // Todo Call connectionManager handler?
                 deleteFile(file);
             }
         }
-    }
-
-
-    // Download file entries from ftp directory and load them into fileListView
-    public void getFileEntriesFromDirectory(String directory){
-
-        connection.downloadDirectory(directory); // Get files from initial directory
-        fileListView.setItems(FileData.getInstance().getRemoteFiles());
-        fileListView.getSelectionModel().selectFirst();
-
     }
 
 
@@ -148,9 +117,52 @@ public class Controller implements Initializable {
         alert.setContentText("Are you sure?"); ////////////////////////////////// Todo this aint gonna work anymore
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && (result.get() == ButtonType.OK)) {
-            FileData.getInstance().deleteRemoteFile(file);
+            FtpDataManager.getInstance().deleteRemoteFile(file);
         }
     }
+
+
+    // LOGIN and LOGOUT ///////////////////////////////////////////
+    @FXML
+    public void login() {
+        // Todo add log text
+
+        clientMgr.login(ipTextField.getText().trim(),
+                portTextField.getText().trim(),
+                usernameTextField.getText().trim(),
+                passwordPassworldField.getText().trim());
+
+
+        downloadAndUpdateDirectoryList(null);
+    }
+
+
+    @FXML
+    public void disconnect() {
+        // Todo add log text update
+
+        clientMgr.disconnect();
+
+        // Clear UI directory list and file contents area
+        fileListView.getItems().clear();
+        fileContentsTextArea.setText("");
+    }
+
+
+    public void downloadAndUpdateDirectoryList(RemoteFile remoteFile){
+
+
+        fileListView.setItems(
+                clientMgr.getDirectory(remoteFile)
+        );
+        fileListView.getSelectionModel().selectFirst();
+
+        // Update UI file and directory count
+        fileCountText.setText("Files: " + clientMgr.getFileCount() + " ");
+        directoryCountText.setText("Directories: " + clientMgr.getDirectoryCount());
+    }
+
+
 
 
     // EXIT ///////////////////////////////////////////////

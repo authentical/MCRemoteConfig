@@ -12,7 +12,7 @@ public class Test {
 //        URLConnection urlConnection = new URL(ftpUrl).openConnection();
 //        InputStream inputStream = urlConnection.getInputStream();
 //        Files.copy(inputStream, new File("downloaded_buz.txt").toPath());
-//        inputStream.close();
+//        inputStream.closeConnection();
 //
 //        assertThat(new File("downloaded_buz.txt")).exists();
 //

@@ -1,6 +1,6 @@
 //package com.potatospy;
 //
-//import com.potatospy.mcremote.Connection;
+//import com.potatospy.mcremote.io.connection.ConnectionManager;
 //import org.junit.After;
 //import org.junit.Before;
 //import org.mockftpserver.fake.FakeFtpServer;
@@ -15,7 +15,7 @@
 //
 //    private FakeFtpServer fakeFtpServer;
 //
-//    private Connection connection;
+//    private ConnectionManager connection;
 //
 //    @Before
 //    public void setup() throws IOException {
@@ -30,13 +30,13 @@
 //
 //        fakeFtpServer.start();
 //
-//        connection = new Connection("localhost", fakeFtpServer.getServerControlPort(), "user", "password");
-//        connection.open();
+//        connection = new ConnectionManager("localhost", fakeFtpServer.getServerControlPort(), "user", "password");
+//        connection.openConnection();
 //    }
 //
 //    @After
 //    public void teardown() throws IOException {
-//        connection.close();
+//        connection.closeConnection();
 //        fakeFtpServer.stop();
 //    }
 //}
